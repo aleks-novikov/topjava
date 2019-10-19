@@ -31,4 +31,11 @@ public class UserMeal implements Comparable<UserMeal> {
     public int compareTo(UserMeal meal) {
         return this.getDateTime().compareTo(meal.getDateTime());
     }
+
+    @Override
+    public String toString() {
+        return  "dateTime="       + dateTime +
+                ", description='" + description + '\'' +
+                ", calories="     + calories;
+    }
 }

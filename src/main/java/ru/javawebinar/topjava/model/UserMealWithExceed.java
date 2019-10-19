@@ -40,4 +40,12 @@ public class UserMealWithExceed {
     public int hashCode() {
         return Objects.hash(dateTime, description, calories, exceed);
     }
+
+    @Override
+    public String toString() {
+        return  "dateTime="       + dateTime +
+                ", description='" + description + '\'' +
+                ", calories="     + calories +
+                ", exceed="       + exceed;
+    }
 }
