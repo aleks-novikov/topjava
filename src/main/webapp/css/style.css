@@ -1,0 +1,46 @@
+h3 {
+  text-align: center;
+}
+
+.meals_header {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.meals_table {
+    width: 100%;
+    font-size: 18px;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.meals_table thead tr {
+    color: #ffffff;
+    font-weight: bold;
+    background: #00bf80;
+}
+
+.meals_table thead tr td {
+    border: 1px solid #01ab73;
+}
+
+.meals_table tbody tr td {
+    border: 1px solid #e8e9eb;
+}
+
+.meals_table tbody tr:nth-child(2n) {
+    background: #f4f4f4;
+}
+
+.meals_table tbody tr:hover {
+    background: #ebffe8;
+}
+
+.meal_red {
+    color: red;
+}
+
+.meal_green {
+    color: forestgreen;
+}
