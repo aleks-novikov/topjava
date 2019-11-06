@@ -5,13 +5,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
         <link rel="stylesheet" href="css/style.css">
-        <title>Meals</title>
+        <title>Список еды</title>
     </head>
 
     <body>
-        <h3><a href="index.html">Home</a></h3>
+        <h3><a href="index.html">Домой</a></h3>
         <hr>
-        <h2 class="meals_header">Meals</h2>
+        <h2 class="meals_header">Список еды</h2>
 
         <section class="content">
             <table class="meals_table">
@@ -21,6 +21,8 @@
                         <th>Описание</th>
                         <th>Количество калорий</th>
                         <th>Превышен лимит за день</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -33,10 +35,17 @@
                             <td>${meal.description}</td>
                             <td>${meal.calories}</td>
                             <td>${meal.excess ? "Да" : "Нет"}</td>
+                            <td><a href="meals?action=update&id=${meal.id}">Обновить</a></td>
+                            <td><a href="meals?action=delete&id=${meal.id}">Удалить</a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
+
+            <div class="action_buttons">
+                <input type="button" value="Добавить" onclick="location.href='meals?action=add'">
+            </div>
+
         </section>
     </body>
 </html>

@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 
 public class Meal {
     private Integer id;
-    private final LocalDateTime dateTime;
-    private final String description;
-
-    private final int calories;
+    private LocalDateTime dateTime;
+    private String description;
+    private int calories;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         id = UniqueIdsFactory.INSTANCE.incrementAndGet();
@@ -24,8 +23,16 @@ public class Meal {
         return dateTime;
     }
 
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getCalories() {

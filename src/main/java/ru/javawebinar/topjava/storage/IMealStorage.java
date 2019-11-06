@@ -1,16 +1,19 @@
 package ru.javawebinar.topjava.storage;
 
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 
-import java.time.LocalDateTime;
+import java.util.Map;
 
 public interface IMealStorage {
 
-    boolean add(LocalDateTime dateTime, String description, int calories, boolean excess);
+    void add(Meal meal);
 
-    MealTo get(Integer id);
+    Meal get(Integer id);
 
-    boolean update(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess);
+    void update(Integer id, Meal meal);
 
-    boolean delete(Integer id);
+    void delete(Integer id);
+
+    Map<Integer, MealTo> getAll();
 }

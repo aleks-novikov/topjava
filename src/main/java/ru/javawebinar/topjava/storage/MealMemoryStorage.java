@@ -7,49 +7,55 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MealMemoryStorage implements IMealStorage {
 
-    private Map<Integer, MealTo> mealsMap;
+    private Map<Integer, Meal> mealsMap;
 
-    private Map<Integer, MealTo> getDefaultMeals() {
-         return new ConcurrentHashMap<>(MealsUtil.getFiltered(Arrays.asList(
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30,10,0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30,13,0), "Обед", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 30,20,0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31,10,0), "Завтрак", 1000),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
-                new Meal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)),
-                LocalTime.MIN, LocalTime.MAX, 2000));
-    }
-
-    public Map<Integer, MealTo> getMealsMap() {
-        if (mealsMap == null) {
-            mealsMap =  new ConcurrentHashMap<>(getDefaultMeals());
-        }
-        return mealsMap;
+    private void getDefaultMeals() {
+        mealsMap = new ConcurrentHashMap<>();
+        Arrays.asList(new Meal(LocalDateTime.of(2015, Month.MAY, 30,10,0), "Завтрак", 500),
+                      new Meal(LocalDateTime.of(2015, Month.MAY, 30,13,0), "Обед", 1000),
+                      new Meal(LocalDateTime.of(2015, Month.MAY, 30,20,0), "Ужин", 500),
+                      new Meal(LocalDateTime.of(2015, Month.MAY, 31,10,0), "Завтрак", 1000),
+                      new Meal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
+                      new Meal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510))
+                      .forEach(meal -> mealsMap.put(meal.getId(), meal));
     }
 
     @Override
-    public boolean add(LocalDateTime dateTime, String description, int calories, boolean excess) {
-        return true;
+    public void add(Meal newMeal) {
+        mealsMap.put(newMeal.getId(), newMeal);
     }
 
     @Override
-    public MealTo get(Integer id) {
+    public Meal get(Integer id) {
         return mealsMap.get(id);
     }
 
     @Override
-    public boolean update(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
-        return true;
+    public void update(Integer id, Meal updatedMeal) {
+        Meal meal = mealsMap.get(id);
+        meal.setDateTime(updatedMeal.getDateTime());
+        meal.setDescription(updatedMeal.getDescription());
+        meal.setCalories(updatedMeal.getCalories());
+        mealsMap.put(id, meal);
     }
 
     @Override
-    public boolean delete(Integer id) {
-        return true;
+    public void delete(Integer id) {
+        mealsMap.computeIfPresent(id, (mealId, meal) -> mealsMap.remove(mealId));
+    }
+
+    @Override
+    public  Map<Integer, MealTo> getAll() {
+        if (mealsMap == null) {
+            getDefaultMeals();
+        }
+        return MealsUtil.getFiltered(new ArrayList<>(mealsMap.values()), LocalTime.MIN, LocalTime.MAX, 2000);
     }
 }
