@@ -1,4 +1,4 @@
-h3 {
+h2, h3 {
   text-align: center;
 }
 
@@ -9,7 +9,7 @@ h3 {
 }
 
 .meals_table {
-    width: 100%;
+    margin: auto;
     font-size: 18px;
     text-align: center;
     border-collapse: collapse;
@@ -19,14 +19,17 @@ h3 {
     color: #ffffff;
     font-weight: bold;
     background: #00bf80;
+    padding: 5px 20px;
 }
 
-.meals_table thead tr td {
+.meals_table thead tr td, th  {
+    padding: 5px 15px;
     border: 1px solid #01ab73;
 }
 
 .meals_table tbody tr td {
-    border: 1px solid #e8e9eb;
+    padding: 5px 15px;
+    border: 1px solid #bec7d8;
 }
 
 .meals_table tbody tr:nth-child(2n) {
@@ -43,4 +46,9 @@ h3 {
 
 .meal_green {
     color: forestgreen;
+}
+
+.control_buttons {
+    margin-top: 15px;
+    text-align: center;
 }
