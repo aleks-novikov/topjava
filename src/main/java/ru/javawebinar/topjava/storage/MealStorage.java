@@ -5,7 +5,7 @@ import ru.javawebinar.topjava.model.MealTo;
 
 import java.util.Map;
 
-public interface IMealStorage {
+public interface MealStorage {
 
     void add(Meal meal);
 
@@ -13,7 +13,7 @@ public interface IMealStorage {
 
     void update(Integer id, Meal meal);
 
-    void delete(Integer id);
+    boolean delete(Integer id);
 
-    Map<Integer, MealTo> getAll();
+    Map<Integer, Meal> getAll();
 }

@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.storage.MealMemoryStorage;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -30,29 +32,29 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        if (action == null) {
-            displayMealsList(request, response);
-            return;
-        }
 
-        switch (action) {
+        switch (action == null ? "getAll" : action) {
             case "add":
                 log.debug("Creating new meal");
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
                 break;
 
             case "update":
-                Integer mealId = Integer.valueOf(request.getParameter("id"));
+                Integer mealId = getId(request);
                 log.debug("Updating meal with id " + mealId);
                 request.setAttribute("meal", mealStorage.get(mealId));
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
                 break;
 
             case "delete":
-                mealId = Integer.valueOf(request.getParameter("id"));
+                mealId = getId(request);
                 log.debug("Deleting meal with id " + mealId);
                 mealStorage.delete(mealId);
                 response.sendRedirect("meals");
+                break;
+
+            case "getAll":
+                displayMealsList(request, response);
         }
     }
 
@@ -77,9 +79,16 @@ public class MealServlet extends HttpServlet {
 
     private void displayMealsList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("Getting meals list");
-        request.setAttribute("mealsList", new ArrayList<>(mealStorage.getAll().values()));
+
+        request.setAttribute("mealsList", MealsUtil.getFiltered(
+                new ArrayList<>(mealStorage.getAll().values()),
+                LocalTime.MIN, LocalTime.MAX, MealsUtil.DEFAULT_CALORIES_PER_DAY));
 
         log.debug("Displaying meals list");
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
+    }
+
+    private Integer getId(HttpServletRequest request) {
+       return Integer.valueOf(request.getParameter("id"));
     }
 }
