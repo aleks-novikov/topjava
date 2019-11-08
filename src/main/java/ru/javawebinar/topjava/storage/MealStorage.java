@@ -1,9 +1,8 @@
 package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
 
-import java.util.Map;
+import java.util.Collection;
 
 public interface MealStorage {
 
@@ -15,5 +14,5 @@ public interface MealStorage {
 
     boolean delete(Integer id);
 
-    Map<Integer, Meal> getAll();
+    Collection<Meal> getAll();
 }

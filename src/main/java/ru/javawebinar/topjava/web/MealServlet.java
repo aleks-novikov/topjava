@@ -70,9 +70,11 @@ public class MealServlet extends HttpServlet {
         Meal meal = new Meal(date, description, calories);
 
         String id = request.getParameter("id");
-        if (id.isEmpty())
-             mealStorage.add(meal);
-        else mealStorage.update(Integer.valueOf(id), meal);
+        if (id.isEmpty()) {
+            mealStorage.add(meal);
+        } else {
+            mealStorage.update(Integer.valueOf(id), meal);
+        }
 
         displayMealsList(request, response);
     }
@@ -81,7 +83,7 @@ public class MealServlet extends HttpServlet {
         log.debug("Getting meals list");
 
         request.setAttribute("mealsList", MealsUtil.getFiltered(
-                new ArrayList<>(mealStorage.getAll().values()),
+                new ArrayList<>(mealStorage.getAll()),
                 LocalTime.MIN, LocalTime.MAX, MealsUtil.DEFAULT_CALORIES_PER_DAY));
 
         log.debug("Displaying meals list");

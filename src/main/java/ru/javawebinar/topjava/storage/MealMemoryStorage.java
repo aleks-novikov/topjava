@@ -7,9 +7,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -45,7 +43,7 @@ public class MealMemoryStorage implements MealStorage {
     }
 
     @Override
-    public  Map<Integer, Meal> getAll() {
-        return mealsMap;
+    public Collection<Meal> getAll() {
+        return mealsMap.values();
     }
 }
