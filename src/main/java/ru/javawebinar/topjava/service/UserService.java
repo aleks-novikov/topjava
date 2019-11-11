@@ -10,6 +10,7 @@ import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIsEmailUnique;
 
 @Service
 public class UserService {
@@ -22,6 +23,7 @@ public class UserService {
     }
 
     public User create(User user) {
+        checkIsEmailUnique(repository.getEmails(), user);
         return repository.save(user);
     }
 
@@ -42,6 +44,7 @@ public class UserService {
     }
 
     public void update(User user) throws NotFoundException {
+        checkIsEmailUnique(repository.getEmails(), user);
         checkNotFoundWithId(repository.save(user), user.getId());
     }
 }

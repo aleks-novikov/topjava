@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.util.UsersUtil;
+
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
@@ -18,16 +20,14 @@ public class User extends AbstractNamedEntity {
 
     private Set<Role> roles;
 
-    private String strRoles;
-
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     public User(Integer id, String name) {
         super(id, name);
     }
 
-    public User(Integer id, String name, String email, String password, Set<Role> roles) {
-        this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, roles);
+    public User(Integer id, String name, String email, String password, int calories, Set<Role> roles) {
+        this(id, name, email, password, calories, true, roles);
     }
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
@@ -93,11 +93,7 @@ public class User extends AbstractNamedEntity {
     }
 
     public String getStrRoles() {
-        return strRoles;
-    }
-
-    public void setStrRoles(String strRoles) {
-        this.strRoles = strRoles;
+        return UsersUtil.getStrRoles(roles);
     }
 
     public boolean isNew() {
