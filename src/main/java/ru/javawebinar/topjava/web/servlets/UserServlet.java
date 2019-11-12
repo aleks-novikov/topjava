@@ -1,10 +1,11 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.servlets;
 
 import org.slf4j.Logger;
+import org.springframework.context.ConfigurableApplicationContext;
+import ru.javawebinar.topjava.SpringContextFactory;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
+import ru.javawebinar.topjava.web.user.AdminRestController;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,12 +20,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
 
-    private UserRepository repository;
+    private AdminRestController userController;
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        repository = new InMemoryUserRepository();
+        appCtx = SpringContextFactory.getContext();
+        userController = appCtx.getBean(AdminRestController.class);
     }
 
     @Override
@@ -38,14 +41,15 @@ public class UserServlet extends HttpServlet {
         String id = request.getParameter("id");
         User user = new User(id.isEmpty() ? null : Integer.valueOf(id),
                 request.getParameter("name"), request.getParameter("email"),
-                request.getParameter("password"), roles);
+                request.getParameter("password"), Integer.parseInt(request.getParameter("calories")),
+                true, roles);
 
-        StringBuilder sb = new StringBuilder();
-        user.getRoles().forEach(role -> sb.append(role.getName()).append(", "));
-        user.setStrRoles(sb.toString().substring(0, sb.length() - 2));
+        if (id.isEmpty()) {
+            userController.create(user);
+        } else {
+            userController.update(user, Integer.parseInt(id));
+        }
 
-        log.info(user.isNew() ? "Create {}" : "Update {}", user);
-        repository.save(user);
         response.sendRedirect("users");
     }
 
@@ -56,15 +60,14 @@ public class UserServlet extends HttpServlet {
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
-                log.info("Delete user with id {}", id);
-                repository.delete(id);
+                userController.delete(id);
                 response.sendRedirect("users");
                 break;
             case "create":
             case "update":
                 final User user = "create".equals(action) ?
                         new User(null, null) :
-                        repository.get(getId(request));
+                        userController.get(getId(request));
                 request.setAttribute("user", user);
                 request.setAttribute("availableRoles", Role.values());
                 request.getRequestDispatcher("/userForm.jsp").forward(request, response);
@@ -72,7 +75,7 @@ public class UserServlet extends HttpServlet {
             case "all":
             default:
                 log.info("get all users");
-                request.setAttribute("users", repository.getAll());
+                request.setAttribute("users", userController.getAll());
                 request.getRequestDispatcher("/users.jsp").forward(request, response);
         }
     }
@@ -80,5 +83,11 @@ public class UserServlet extends HttpServlet {
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        if (appCtx.isActive()) appCtx.close();
     }
 }

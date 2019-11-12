@@ -8,7 +8,7 @@
 
     <servlet>
         <servlet-name>userServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
+        <servlet-class>ru.javawebinar.topjava.web.servlets.UserServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -18,8 +18,8 @@
 
     <servlet>
         <servlet-name>mealServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
+        <servlet-class>ru.javawebinar.topjava.web.servlets.MealServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>mealServlet</servlet-name>

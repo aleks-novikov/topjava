@@ -28,7 +28,7 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkNew(AbstractBaseEntity entity) {
+    public static void checkIsNew(AbstractBaseEntity entity) {
         if (!entity.isNew()) {
             throw new IllegalArgumentException(entity + " must be new (id=null)");
         }
@@ -47,8 +47,8 @@ public class ValidationUtil {
         String email = user.getEmail();
 
         if (emails.containsValue(email) &&
-                (user.getId() == null) ||
-                user.getId() != null && !emails.get(user.getId()).equals(email)) {
+                ((user.getId() == null) ||
+                        user.getId() != null && !emails.get(user.getId()).equals(email))) {
             throw new IllegalArgumentException("email " + email + " is already exists");
         }
     }

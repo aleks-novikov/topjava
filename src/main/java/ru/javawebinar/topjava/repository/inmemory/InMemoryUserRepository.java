@@ -20,7 +20,7 @@ public class InMemoryUserRepository implements UserRepository {
     private Map<Integer, String> emails = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
-    public InMemoryUserRepository() {
+    {
         UsersUtil.USERS.forEach(this::save);
     }
 
