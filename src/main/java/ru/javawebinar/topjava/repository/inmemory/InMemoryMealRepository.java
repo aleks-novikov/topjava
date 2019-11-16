@@ -6,16 +6,12 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
-    private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
+    private Map<Integer, Map<Integer, Meal>> repository = new HashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
@@ -36,7 +32,6 @@ public class InMemoryMealRepository implements MealRepository {
             return meal;
         }
         
-        // treat case: update, but not present in storage
         Meal updatedMeal = getUserMeals().computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
 
         if (getUserMeals().values().size() > 1)
@@ -55,8 +50,8 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAll() {
-        return new ArrayList<>(getUserMeals().values());
+    public Collection<Meal> getAll() {
+        return getUserMeals().values();
     }
 
     private Map<Integer, Meal> getUserMeals() {
@@ -65,8 +60,8 @@ public class InMemoryMealRepository implements MealRepository {
     }
     
     private void sortMeals() {
-        getUserMeals().clear();
         List<Meal> sortedMeals = MealsUtil.sortByDate(getUserMeals().values());
+        getUserMeals().clear();
         sortedMeals.forEach(meal -> getUserMeals().put(meal.getId(), meal));
     }
 }

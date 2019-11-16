@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.*;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealService {
@@ -33,7 +36,11 @@ public class MealService {
     }
 
     public List<Meal> getAll() {
-        return repository.getAll();
+        Collection<Meal> meals = repository.getAll();
+        if (SecurityUtil.authUserId() != 0 && meals.size() == 0)
+            throw new NotFoundException("Meals for specified user is not found");
+        else
+            return new ArrayList<>(meals);
     }
 
     public void update(Meal meal) throws NotFoundException {

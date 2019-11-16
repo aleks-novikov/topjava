@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -80,8 +81,9 @@ public class MealServlet extends HttpServlet {
             default:
                 log.info("getAll");
                 request.setAttribute("selectedUser", SecurityUtil.authUserId());
-                request.setAttribute("meals", MealsUtil.getTos(
-                        mealController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", SecurityUtil.authUserId() != 0
+                        ? MealsUtil.getTos(mealController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY)
+                        : Collections.emptyList());
 
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
