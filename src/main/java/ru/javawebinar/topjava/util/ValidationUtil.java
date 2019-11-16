@@ -2,10 +2,7 @@ package ru.javawebinar.topjava.util;
 
 
 import ru.javawebinar.topjava.model.AbstractBaseEntity;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-
-import java.util.Map;
 
 public class ValidationUtil {
 
@@ -40,16 +37,6 @@ public class ValidationUtil {
             entity.setId(id);
         } else if (entity.getId() != id) {
             throw new IllegalArgumentException(entity + " must be with id=" + id);
-        }
-    }
-
-    public static void checkIsEmailUnique(Map<Integer, String> emails, User user) {
-        String email = user.getEmail();
-
-        if (emails.containsValue(email) &&
-                ((user.getId() == null) ||
-                        user.getId() != null && !emails.get(user.getId()).equals(email))) {
-            throw new IllegalArgumentException("email " + email + " is already exists");
         }
     }
 }

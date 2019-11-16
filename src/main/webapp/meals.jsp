@@ -26,9 +26,8 @@
         <label>
             Выберите пользователя для показа еды
             <select name="authUser">
-                <c:forEach var="user" items="${users}">
-                    <option value="${user.id}">${user.name}</option>
-                </c:forEach>
+                    <option value="1">User 1</option>
+                    <option value="2">User 2</option>
             </select>
         </label>
 
