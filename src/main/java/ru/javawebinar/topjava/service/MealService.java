@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
@@ -51,15 +50,14 @@ public class MealService {
     }
 
     public List<Meal> getAllByDate(String startDate, String endDate) {
-        return MealsUtil.filterByDate(getAll(), parse(startDate), parse(endDate));
+        return repository.getAllByDate(parse(startDate), parse(endDate));
     }
 
     public List<Meal> getAllByTime(String startTime, String endTime) {
-        return MealsUtil.filterByTime(getAll(), LocalTime.parse(startTime), LocalTime.parse(endTime));
+        return repository.getAllByTime(LocalTime.parse(startTime), LocalTime.parse(endTime));
     }
 
     public List<Meal> getAllByDateTime(String startDate, String endDate, String startTime, String endTime) {
-        return MealsUtil.filterByDateTime(getAll(), parse(startDate), parse(endDate),
-                                          LocalTime.parse(startTime), LocalTime.parse(endTime));
+        return repository.getAllByDateTime(parse(startDate), parse(endDate), LocalTime.parse(startTime), LocalTime.parse(endTime));
     }
 }

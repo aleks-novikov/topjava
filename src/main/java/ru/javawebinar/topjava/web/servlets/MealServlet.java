@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.web.servlets;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
@@ -74,15 +74,25 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 request.setAttribute("selectedUser", SecurityUtil.authUserId());
-                request.setAttribute("meals", SecurityUtil.authUserId() != 0
-                        ? MealsUtil.getTos(mealController.getAll(request), MealsUtil.DEFAULT_CALORIES_PER_DAY)
-                        : Collections.emptyList());
+
+                //используется для отображения таблицы, пока не выбран authUser
+                if (SecurityUtil.authUserId() == 0) {
+                    request.setAttribute("meals", Collections.emptyList());
+                    request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                    return;
+                }
+
+                List<Meal> meals = mealController.useFilterByDateTime(request)
+                                 ? mealController.getAllFiltered(request)
+                                 : mealController.getAll();
+
+                request.setAttribute("meals", mealController.getTo(meals));
 
                 boolean cleanFilter = request.getParameter("clearFilter") != null;
                 request.setAttribute("startTime", !cleanFilter ? request.getParameter("startTime") : null);
                 request.setAttribute("endTime",   !cleanFilter ? request.getParameter("endTime")   : null);
                 request.setAttribute("startDate", !cleanFilter ? request.getParameter("startDate") : null);
-                request.setAttribute("endDate", !cleanFilter ? request.getParameter("endDate")   : null);
+                request.setAttribute("endDate",   !cleanFilter ? request.getParameter("endDate")   : null);
 
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }

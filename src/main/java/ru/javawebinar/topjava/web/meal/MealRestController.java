@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -21,7 +23,23 @@ public class MealRestController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public List<Meal> getAll(HttpServletRequest request) {
+    public List<Meal> getAll(){
+       log.info("getAll ");
+       return service.getAll();
+    }
+
+    public List<MealTo> getTo(List<Meal> meals){
+        log.info("get TO");
+        return MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    }
+
+    public List<Meal> getAllFiltered(HttpServletRequest request) {
+
+        if (filterByDate(request) && filterByTime(request)) {
+            log.info("getAll filtered by date and time");
+            return service.getAllByDateTime(request.getParameter("startDate"), request.getParameter("endDate"),
+                    request.getParameter("startTime"), request.getParameter("endTime"));
+        }
 
         if (filterByDate(request)) {
             log.info("getAll filtered by date");
@@ -29,20 +47,9 @@ public class MealRestController {
                                         request.getParameter("endDate"));
         }
 
-        if (filterByTime(request)) {
-            log.info("getAll filtered by time");
-            return service.getAllByTime(request.getParameter("startTime"),
-                                        request.getParameter("endTime"));
-        }
-
-        if (filterByDate(request) && filterByTime(request)) {
-            log.info("getAll filtered by date and time");
-            return service.getAllByDateTime(request.getParameter("startDate"), request.getParameter("endDate"),
-                                            request.getParameter("startTime"), request.getParameter("endTime"));
-        }
-
-        log.info("getAll");
-        return service.getAll();
+        log.info("getAll filtered by time");
+        return service.getAllByTime(request.getParameter("startTime"),
+                                    request.getParameter("endTime"));
     }
 
     public Meal get(int id) {
@@ -67,17 +74,21 @@ public class MealRestController {
         service.update(meal);
     }
 
-        private boolean filterByDate(HttpServletRequest request) {
-            return isNotEmpty(request.getParameter("startDate")) &&
-                    isNotEmpty(request.getParameter("endDate"));
-        }
+    public boolean useFilterByDateTime(HttpServletRequest request) {
+        return filterByDate(request) || filterByTime(request);
+    }
 
-        private boolean filterByTime(HttpServletRequest request) {
-            return isNotEmpty(request.getParameter("startTime")) &&
-                    isNotEmpty(request.getParameter("endTime"));
-        }
+    private boolean filterByDate(HttpServletRequest request) {
+        return isNotEmpty(request.getParameter("startDate")) &&
+               isNotEmpty(request.getParameter("endDate"));
+    }
 
-        private boolean isNotEmpty(String param) {
-            return param != null && !param.isEmpty();
-        }
+    private boolean filterByTime(HttpServletRequest request) {
+        return isNotEmpty(request.getParameter("startTime")) &&
+               isNotEmpty(request.getParameter("endTime"));
+    }
+
+    private boolean isNotEmpty(String param) {
+        return param != null && !param.isEmpty();
+    }
 }

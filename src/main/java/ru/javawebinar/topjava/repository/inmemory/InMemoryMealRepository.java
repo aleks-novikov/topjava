@@ -6,6 +6,8 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,6 +65,21 @@ public class InMemoryMealRepository implements MealRepository {
         List<Meal> sortedMeals = MealsUtil.sortByDate(getUserMeals().values());
         getUserMeals().clear();
         sortedMeals.forEach(meal -> getUserMeals().put(meal.getId(), meal));
+    }
+
+    @Override
+    public List<Meal> getAllByDate(LocalDate startDate, LocalDate endDate) {
+        return MealsUtil.filterByDate(getAll(), startDate, endDate);
+    }
+
+    @Override
+    public List<Meal> getAllByTime(LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.filterByTime(getAll(), startTime, endTime);
+    }
+
+    @Override
+    public List<Meal> getAllByDateTime(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.filterByDateTime(getAll(), startDate, endDate, startTime, endTime);
     }
 }
 

@@ -62,7 +62,7 @@ public class MealsUtil {
 
     public static List<Meal> filterByTime(Collection<Meal> meals, LocalTime startTime, LocalTime endTime) {
         return meals.stream().filter(meal -> DateTimeUtil.isBetweenTime(meal.getTime(), startTime, endTime))
-                    .collect(Collectors.toList());
+                             .collect(Collectors.toList());
     }
 
     public static List<Meal> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate,
