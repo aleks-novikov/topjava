@@ -6,15 +6,7 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
-
-        .excess {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
 <section>
@@ -27,21 +19,53 @@
             Choose user
             <select name="authUser">
                 <c:if test="${selectedUser != '2'}">
-                    <option value="1" selected>User 1</option>
+                    <option value="1" selected="selected">User 1</option>
                     <option value="2">User 2</option>
                 </c:if>
 
                 <c:if test="${selectedUser == '2'}">
                     <option value="1">User 1</option>
-                    <option value="2" selected>User 2</option>
+                    <option value="2" selected="selected">User 2</option>
                 </c:if>
             </select>
         </label>
         <button type="submit">Show selected user's meals</button>
     </form>
 
+    <input type="hidden" name="id" value="${meal.id}"/>
+
+    <h3>Filter Meals</h3>
+
+    <form action="meals" method="get">
+        <div>
+            <label for="startTime">From</label>
+            <input type="time" name="startTime" id="startTime" value="${startTime}">
+
+            <label for="endTime">To</label>
+            <input type="time" name="endTime" id="endTime" value="${endTime}">
+        </div>
+
+        <div>
+            <label for="startDate">From</label>
+            <input type="date" name="startDate" id="startDate" value="${startDate}">
+
+            <label for="endDate">To</label>
+            <input type="date" name="endDate" id="endDate" value="${endDate}">
+        </div>
+
+        <button type="submit" class="filter_btn">Filter</button>
+    </form>
+
+    <form action="meals" method="get">
+        <input type="hidden" name="clearFilter" value="true"/>
+        <button type="submit">Clear</button>
+    </form>
+
+    <hr/>
+
     <a href="meals?action=create">Add Meal</a>
-    <br><br>
+    <br/>
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>

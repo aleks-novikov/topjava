@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -20,7 +21,26 @@ public class MealRestController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public List<Meal> getAll() {
+    public List<Meal> getAll(HttpServletRequest request) {
+
+        if (filterByDate(request)) {
+            log.info("getAll filtered by date");
+            return service.getAllByDate(request.getParameter("startDate"),
+                                        request.getParameter("endDate"));
+        }
+
+        if (filterByTime(request)) {
+            log.info("getAll filtered by time");
+            return service.getAllByTime(request.getParameter("startTime"),
+                                        request.getParameter("endTime"));
+        }
+
+        if (filterByDate(request) && filterByTime(request)) {
+            log.info("getAll filtered by date and time");
+            return service.getAllByDateTime(request.getParameter("startDate"), request.getParameter("endDate"),
+                                            request.getParameter("startTime"), request.getParameter("endTime"));
+        }
+
         log.info("getAll");
         return service.getAll();
     }
@@ -46,4 +66,18 @@ public class MealRestController {
         assureIdConsistent(meal, id);
         service.update(meal);
     }
+
+        private boolean filterByDate(HttpServletRequest request) {
+            return isNotEmpty(request.getParameter("startDate")) &&
+                    isNotEmpty(request.getParameter("endDate"));
+        }
+
+        private boolean filterByTime(HttpServletRequest request) {
+            return isNotEmpty(request.getParameter("startTime")) &&
+                    isNotEmpty(request.getParameter("endTime"));
+        }
+
+        private boolean isNotEmpty(String param) {
+            return param != null && !param.isEmpty();
+        }
 }
