@@ -22,16 +22,22 @@
     <hr/>
     <h2>Meals</h2>
 
-    <form action="meals" method="post">
+    <form action="meals" method="get">
         <label>
-            Выберите пользователя для показа еды
+            Choose user
             <select name="authUser">
-                    <option value="1">User 1</option>
+                <c:if test="${selectedUser != '2'}">
+                    <option value="1" selected>User 1</option>
                     <option value="2">User 2</option>
+                </c:if>
+
+                <c:if test="${selectedUser == '2'}">
+                    <option value="1">User 1</option>
+                    <option value="2" selected>User 2</option>
+                </c:if>
             </select>
         </label>
-
-        <button type="submit">Выбрать</button>
+        <button type="submit">Show selected user's meals</button>
     </form>
 
     <a href="meals?action=create">Add Meal</a>
