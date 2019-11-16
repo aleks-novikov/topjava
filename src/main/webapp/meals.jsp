@@ -21,6 +21,20 @@
     <h3><a href="index.html">Home</a></h3>
     <hr/>
     <h2>Meals</h2>
+
+    <form action="meals" method="post">
+        <label>
+            Выберите пользователя для показа еды
+            <select name="authUser">
+                <c:forEach var="user" items="${users}">
+                    <option value="${user.id}">${user.name}</option>
+                </c:forEach>
+            </select>
+        </label>
+
+        <button type="submit">Выбрать</button>
+    </form>
+
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">

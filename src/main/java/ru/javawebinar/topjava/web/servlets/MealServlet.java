@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import ru.javawebinar.topjava.SpringContextFactory;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -23,16 +26,29 @@ public class MealServlet extends HttpServlet {
 
     private MealRestController mealController;
     private ConfigurableApplicationContext appCtx;
+    private UserRepository userRepository;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         appCtx = SpringContextFactory.getContext();
         mealController = appCtx.getBean(MealRestController.class);
+        userRepository = appCtx.getBean(InMemoryUserRepository.class);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String userId = request.getParameter("authUser");
+        if (userId != null) {
+            SecurityUtil.setAuthUserId(Integer.parseInt(userId));
+
+//            request.setAttribute("users", userRepository.getAll());
+//            request.setAttribute("meals",
+//                    MealsUtil.getTos(mealController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+//            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+//            return;
+        }
+
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
@@ -74,10 +90,10 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
+                request.setAttribute("users", userRepository.getAll());
                 request.setAttribute("meals",
                         MealsUtil.getTos(mealController.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                break;
         }
     }
 

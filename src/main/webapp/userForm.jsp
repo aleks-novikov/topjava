@@ -42,16 +42,16 @@
                         <label>${role.name}
 
                             <c:forEach var="role" items="${availableRoles}">
-                            <c:if test="${role.name == 'User'}">
-                            <option value="${role.name}" selected>
+                                <c:if test="${role.name == 'User'}">
+                                    <option value="${role.name}" selected>
                                 </c:if>
 
                                 <c:if test="${role.name != 'User'}">
-                            <option value="${role.name}">
+                                    <option value="${role.name}">
                                 </c:if>
 
-                                    ${role.name}
-                            </option>
+                                ${role.name}
+                                </option>
                             </c:forEach>
                     </select>
                 </label>
