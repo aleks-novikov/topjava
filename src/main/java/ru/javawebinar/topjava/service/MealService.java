@@ -7,8 +7,6 @@ import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static java.time.LocalDate.parse;
@@ -42,14 +40,7 @@ public class MealService {
 
     public List<Meal> getAll(int userId) {
         checkUserExists(repository.userExists(userId), userId);
-
-        Collection<Meal> meals = repository.getAll(userId);
-        if (meals == null) return null;
-
-        if (meals.size() == 0)
-            throw new NotFoundException("Meals for specified user is not found");
-        else
-            return new ArrayList<>(meals);
+        return repository.getAll(userId);
     }
 
     public void update(int userId, Meal meal) throws NotFoundException {
