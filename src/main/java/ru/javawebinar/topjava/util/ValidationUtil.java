@@ -39,4 +39,10 @@ public class ValidationUtil {
             throw new IllegalArgumentException(entity + " must be with id=" + id);
         }
     }
+
+    public static void checkUserExists(boolean exists, int userId) {
+        if (!exists) {
+            throw new NotFoundException("User with id " + userId + " not found");
+        }
+    }
 }

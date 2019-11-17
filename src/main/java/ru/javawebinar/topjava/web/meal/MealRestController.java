@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,7 +26,7 @@ public class MealRestController {
 
     public List<Meal> getAll(){
        log.info("getAll ");
-       return service.getAll();
+       return service.getAll(SecurityUtil.authUserId());
     }
 
     public List<MealTo> getTo(List<Meal> meals){
@@ -54,24 +55,24 @@ public class MealRestController {
 
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id);
+        return service.get(SecurityUtil.authUserId(), id);
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkIsNew(meal);
-        return service.create(meal);
+        return service.create(SecurityUtil.authUserId(), meal);
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id);
+        service.delete(SecurityUtil.authUserId(), id);
     }
 
     public void update(Meal meal, int id) {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
-        service.update(meal);
+        service.update(SecurityUtil.authUserId(), meal);
     }
 
     public boolean useFilterByDateTime(HttpServletRequest request) {

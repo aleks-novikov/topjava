@@ -56,11 +56,6 @@
         <button type="submit" class="filter_btn">Filter</button>
     </form>
 
-    <form action="meals" method="get">
-        <input type="hidden" name="clearFilter" value="true"/>
-        <button type="submit">Clear</button>
-    </form>
-
     <hr/>
 
     <a href="meals?action=create">Add Meal</a>

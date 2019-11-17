@@ -31,29 +31,28 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
 
         String id = request.getParameter("id");
-        Meal meal = new Meal(id == null || id.isEmpty() ? null : Integer.valueOf(id),
+        Meal meal = new Meal(id == null || id.isEmpty() ? null : getInt(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+                getInt(request.getParameter("calories")));
 
-        if (meal.getId() == null) {
+        if (meal.isNew())
             mealController.create(meal);
-        } else {
-            mealController.update(meal, Integer.parseInt(id));
-        }
+        else
+            mealController.update(meal, getInt(id));
 
-        response.sendRedirect("meals");
+        request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userId = request.getParameter("authUser");
         if (userId != null)
-            SecurityUtil.setAuthUserId(Integer.parseInt(userId));
+            SecurityUtil.setAuthUserId(getInt(userId));
 
         String action = request.getParameter("action");
 
@@ -87,25 +86,22 @@ public class MealServlet extends HttpServlet {
                                  : mealController.getAll();
 
                 request.setAttribute("meals", mealController.getTo(meals));
-
-                boolean cleanFilter = request.getParameter("clearFilter") != null;
-                request.setAttribute("startTime", !cleanFilter ? request.getParameter("startTime") : null);
-                request.setAttribute("endTime",   !cleanFilter ? request.getParameter("endTime")   : null);
-                request.setAttribute("startDate", !cleanFilter ? request.getParameter("startDate") : null);
-                request.setAttribute("endDate",   !cleanFilter ? request.getParameter("endDate")   : null);
-
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
-        return Integer.parseInt(paramId);
+        return getInt(paramId);
+    }
+
+    private int getInt(String id) {
+        return Integer.parseInt(id);
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        if (appCtx.isActive()) appCtx.close();
+        appCtx.close();
     }
 }

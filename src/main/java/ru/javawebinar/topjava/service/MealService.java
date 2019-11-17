@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import static java.time.LocalDate.parse;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkUserExists;
 
 @Service
 public class MealService {
@@ -25,28 +25,36 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Meal create(Meal meal) {
-        return repository.save(meal);
+    public Meal create(int userId, Meal meal) {
+        checkUserExists(repository.userExists(userId), userId);
+        return repository.save(userId, meal);
     }
 
-    public void delete(int id) throws NotFoundException {
-        checkNotFoundWithId(repository.delete(id), id);
+    public void delete(int userId, int id) throws NotFoundException {
+        checkUserExists(repository.userExists(userId), userId);
+        checkNotFoundWithId(repository.delete(userId, id), id);
     }
 
-    public Meal get(int id) throws NotFoundException {
-        return checkNotFoundWithId(repository.get(id), id);
+    public Meal get(int userId, int id) throws NotFoundException {
+        checkUserExists(repository.userExists(userId), userId);
+        return checkNotFoundWithId(repository.get(userId, id), id);
     }
 
-    public List<Meal> getAll() {
-        Collection<Meal> meals = repository.getAll();
-        if (SecurityUtil.authUserId() != 0 && meals.size() == 0)
+    public List<Meal> getAll(int userId) {
+        checkUserExists(repository.userExists(userId), userId);
+
+        Collection<Meal> meals = repository.getAll(userId);
+        if (meals == null) return null;
+
+        if (meals.size() == 0)
             throw new NotFoundException("Meals for specified user is not found");
         else
             return new ArrayList<>(meals);
     }
 
-    public void update(Meal meal) throws NotFoundException {
-        checkNotFoundWithId(repository.save(meal), meal.getId());
+    public void update(int userId, Meal meal) throws NotFoundException {
+        checkUserExists(repository.userExists(userId), userId);
+        checkNotFoundWithId(repository.save(userId, meal), meal.getId());
     }
 
     public List<Meal> getAllByDate(String startDate, String endDate) {
