@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -48,7 +49,8 @@ public class MealService {
         checkNotFoundWithId(repository.save(userId, meal), meal.getId());
     }
 
-    public List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return repository.getAllByDateTime(userId, startDate, endDate, startTime, endTime);
+    public List<MealTo> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
+                                         LocalTime startTime, LocalTime endTime, int caloriesLimit) {
+        return repository.getAllByDateTime(userId, startDate, endDate, startTime, endTime, caloriesLimit);
     }
 }

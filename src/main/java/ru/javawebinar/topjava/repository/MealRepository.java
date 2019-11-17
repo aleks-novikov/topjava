@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,8 +19,8 @@ public interface MealRepository {
 
     List<Meal> getAll(int userId);
 
-    List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
-                                            LocalTime startTime, LocalTime endTime);
+    List<MealTo> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
+                                  LocalTime startTime, LocalTime endTime, int caloriesLimit);
 
     boolean userExists(int userId);
 }

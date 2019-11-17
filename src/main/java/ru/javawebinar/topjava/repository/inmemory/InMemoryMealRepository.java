@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
@@ -27,16 +28,10 @@ public class InMemoryMealRepository implements MealRepository {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             userMeals.put(meal.getId(), meal);
-
-            if (userMeals.values().size() > 1)
-                sortMeals();
             return meal;
         }
 
-        Meal updatedMeal = userMeals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
-        if (userMeals.values().size() > 1)
-            sortMeals();
-        return updatedMeal;
+        return userMeals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
@@ -57,16 +52,11 @@ public class InMemoryMealRepository implements MealRepository {
     private Map<Integer, Meal> getUserMeals(int userId) {
         return repository.computeIfAbsent(userId, id -> new LinkedHashMap<>());
     }
-    
-    private void sortMeals() {
-        List<Meal> sortedMeals = MealsUtil.sortByDate(getUserMeals(1).values());
-        getUserMeals(1).clear();
-        sortedMeals.forEach(meal -> getUserMeals(1).put(meal.getId(), meal));
-    }
 
     @Override
-    public List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.filterByDateTime(getAll(userId), startDate, endDate, startTime, endTime);
+    public List<MealTo> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
+                                         LocalTime startTime, LocalTime endTime, int caloriesLimit) {
+        return MealsUtil.filterByDateTime(getAll(userId), startDate, endDate, startTime, endTime, caloriesLimit);
     }
 
     @Override

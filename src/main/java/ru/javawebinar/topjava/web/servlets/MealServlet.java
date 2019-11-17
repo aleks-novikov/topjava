@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.servlets;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -74,14 +75,14 @@ public class MealServlet extends HttpServlet {
                 String startTime = request.getParameter("startTime");
                 String endTime = request.getParameter("endTime");
 
-                List<Meal> meals = !mealController.useFilterByDateTime(request)
+                List<MealTo> meals = !mealController.useFilterByDateTime(request)
                                ? mealController.getAll()
-                               : mealController.getAllFiltered(!startDate.isEmpty() ? LocalDate.parse(startDate) : LocalDate.MIN,
-                                                               !endDate.isEmpty()   ? LocalDate.parse(endDate)   : LocalDate.MAX,
-                                                               !startTime.isEmpty() ? LocalTime.parse(startTime) : LocalTime.MIN,
-                                                               !endTime.isEmpty()   ? LocalTime.parse(endTime)   : LocalTime.MAX);
+                               : mealController.getFiltered(!startDate.isEmpty() ? LocalDate.parse(startDate) : LocalDate.MIN,
+                                                            !endDate.isEmpty()   ? LocalDate.parse(endDate)   : LocalDate.MAX,
+                                                            !startTime.isEmpty() ? LocalTime.parse(startTime) : LocalTime.MIN,
+                                                            !endTime.isEmpty()   ? LocalTime.parse(endTime)   : LocalTime.MAX);
 
-                request.setAttribute("meals", mealController.getTo(meals));
+                request.setAttribute("meals", meals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }

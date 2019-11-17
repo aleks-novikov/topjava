@@ -50,16 +50,17 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static List<Meal> sortByDate(Collection<Meal> meals) {
-        return meals.stream().sorted(Comparator.comparing(Meal::getDateTime)
+    public static <T> List<T> sortByDate(List<T> meals) {
+        T meal = meals.get(0);
+        return meals.stream().sorted(Comparator.comparing((T mealTo) -> meal instanceof Meal
+                             ? ((Meal) meal).getDateTime() : ((MealTo) meal).getDateTime())
                              .reversed()).collect(Collectors.toList());
     }
 
-    public static List<Meal> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate,
-                                                                      LocalTime startTime, LocalTime endTime) {
-
-        return meals.stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
-                             .filter(meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
-                             .collect(Collectors.toList());
+    public static List<MealTo> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate,
+                                                                        LocalTime startTime, LocalTime endTime, int caloriesLimit) {
+        return getFiltered(meals, caloriesLimit, meal ->
+                            DateTimeUtil.isBetween(meal.getDate(), startDate, endDate) &&
+                            DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
     }
 }
