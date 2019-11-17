@@ -65,18 +65,8 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllByDate(LocalDate startDate, LocalDate endDate) {
-        return MealsUtil.filterByDate(getAll(1), startDate, endDate);
-    }
-
-    @Override
-    public List<Meal> getAllByTime(LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.filterByTime(getAll(1), startTime, endTime);
-    }
-
-    @Override
-    public List<Meal> getAllByDateTime(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.filterByDateTime(getAll(1), startDate, endDate, startTime, endTime);
+    public List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.filterByDateTime(getAll(userId), startDate, endDate, startTime, endTime);
     }
 
     @Override

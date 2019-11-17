@@ -21,18 +21,19 @@
     <form action="meals" method="get">
         <div>
             <label for="startTime">From</label>
-            <input type="time" name="startTime" id="startTime" value="${startTime}">
+            <%--IMPORTANT! Get parameter from Servlet using param.paramName--%>
+            <input type="time" name="startTime" id="startTime" value="${param.startTime}">
 
             <label for="endTime">To</label>
-            <input type="time" name="endTime" id="endTime" value="${endTime}">
+            <input type="time" name="endTime" id="endTime" value="${param.endTime}">
         </div>
 
         <div>
             <label for="startDate">From</label>
-            <input type="date" name="startDate" id="startDate" value="${startDate}">
+            <input type="date" name="startDate" id="startDate" value="${param.startDate}">
 
             <label for="endDate">To</label>
-            <input type="date" name="endDate" id="endDate" value="${endDate}">
+            <input type="date" name="endDate" id="endDate" value="${param.endDate}">
         </div>
 
         <button type="submit" class="filter_btn">Filter</button>

@@ -31,7 +31,7 @@ public class MealsUtil {
     }
 
     public static List<MealTo> getFilteredTos(Collection<Meal> meals, int caloriesPerDay, LocalTime startTime, LocalTime endTime) {
-        return getFiltered(meals, caloriesPerDay, meal -> DateTimeUtil.isBetweenTime(meal.getTime(), startTime, endTime));
+        return getFiltered(meals, caloriesPerDay, meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
     }
 
     private static List<MealTo> getFiltered(Collection<Meal> meals, int caloriesPerDay, Predicate<Meal> filter) {
@@ -55,19 +55,11 @@ public class MealsUtil {
                              .reversed()).collect(Collectors.toList());
     }
 
-    public static List<Meal> filterByDate(Collection<Meal> meals, LocalDate startDate, LocalDate endDate) {
-        return meals.stream().filter(meal -> DateTimeUtil.isBetweenDate(meal.getDate(), startDate, endDate))
-                             .collect(Collectors.toList());
-    }
-
-    public static List<Meal> filterByTime(Collection<Meal> meals, LocalTime startTime, LocalTime endTime) {
-        return meals.stream().filter(meal -> DateTimeUtil.isBetweenTime(meal.getTime(), startTime, endTime))
-                             .collect(Collectors.toList());
-    }
-
     public static List<Meal> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate,
                                                                       LocalTime startTime, LocalTime endTime) {
-        List<Meal> sorteredByDate = filterByDate(meals, startDate, endDate);
-        return filterByTime(sorteredByDate, startTime, endTime);
+
+        return meals.stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
+                             .filter(meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
+                             .collect(Collectors.toList());
     }
 }

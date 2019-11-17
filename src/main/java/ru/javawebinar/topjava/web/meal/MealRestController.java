@@ -11,6 +11,8 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -34,24 +36,14 @@ public class MealRestController {
         return MealsUtil.getTos(meals, MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public List<Meal> getAllFiltered(HttpServletRequest request) {
+    public List<Meal> getAllFiltered(LocalDate startDate, LocalDate endDate,
+                                     LocalTime startTime, LocalTime endTime) {
 
-        if (filterByDate(request) && filterByTime(request)) {
-            log.info("getAll filtered by date and time");
-            return service.getAllByDateTime(request.getParameter("startDate"), request.getParameter("endDate"),
-                    request.getParameter("startTime"), request.getParameter("endTime"));
-        }
-
-        if (filterByDate(request)) {
-            log.info("getAll filtered by date");
-            return service.getAllByDate(request.getParameter("startDate"),
-                                        request.getParameter("endDate"));
-        }
-
-        log.info("getAll filtered by time");
-        return service.getAllByTime(request.getParameter("startTime"),
-                                    request.getParameter("endTime"));
+        log.info("getAll filtered by date and time");
+        return service.getAllByDateTime(SecurityUtil.authUserId(),
+                                        startDate, endDate, startTime, endTime);
     }
+
 
     public Meal get(int id) {
         log.info("get {}", id);
@@ -76,16 +68,9 @@ public class MealRestController {
     }
 
     public boolean useFilterByDateTime(HttpServletRequest request) {
-        return filterByDate(request) || filterByTime(request);
-    }
-
-    private boolean filterByDate(HttpServletRequest request) {
-        return isNotEmpty(request.getParameter("startDate")) &&
-               isNotEmpty(request.getParameter("endDate"));
-    }
-
-    private boolean filterByTime(HttpServletRequest request) {
-        return isNotEmpty(request.getParameter("startTime")) &&
+        return isNotEmpty(request.getParameter("startDate")) ||
+               isNotEmpty(request.getParameter("endDate"))   ||
+               isNotEmpty(request.getParameter("startTime")) ||
                isNotEmpty(request.getParameter("endTime"));
     }
 

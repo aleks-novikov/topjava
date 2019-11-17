@@ -6,10 +6,10 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static java.time.LocalDate.parse;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkUserExists;
 
@@ -48,15 +48,7 @@ public class MealService {
         checkNotFoundWithId(repository.save(userId, meal), meal.getId());
     }
 
-    public List<Meal> getAllByDate(String startDate, String endDate) {
-        return repository.getAllByDate(parse(startDate), parse(endDate));
-    }
-
-    public List<Meal> getAllByTime(String startTime, String endTime) {
-        return repository.getAllByTime(LocalTime.parse(startTime), LocalTime.parse(endTime));
-    }
-
-    public List<Meal> getAllByDateTime(String startDate, String endDate, String startTime, String endTime) {
-        return repository.getAllByDateTime(parse(startDate), parse(endDate), LocalTime.parse(startTime), LocalTime.parse(endTime));
+    public List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return repository.getAllByDateTime(userId, startDate, endDate, startTime, endTime);
     }
 }

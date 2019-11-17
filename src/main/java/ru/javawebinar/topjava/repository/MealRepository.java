@@ -18,11 +18,8 @@ public interface MealRepository {
 
     List<Meal> getAll(int userId);
 
-    List<Meal> getAllByDate(LocalDate startDate, LocalDate endDate);
-
-    List<Meal> getAllByTime(LocalTime startTime, LocalTime endTime);
-
-    List<Meal> getAllByDateTime(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
+    List<Meal> getAllByDateTime(int userId, LocalDate startDate, LocalDate endDate,
+                                            LocalTime startTime, LocalTime endTime);
 
     boolean userExists(int userId);
 }
