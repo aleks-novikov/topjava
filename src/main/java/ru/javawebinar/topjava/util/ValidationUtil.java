@@ -40,8 +40,8 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkUserExists(boolean exists, int userId) {
-        if (!exists) {
+    public static void checkUserExists(boolean userExists, int userId) {
+        if (userId != 0 && !userExists) {
             throw new NotFoundException("User with id " + userId + " not found");
         }
     }

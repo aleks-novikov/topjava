@@ -14,24 +14,6 @@
     <hr/>
     <h2>Meals</h2>
 
-    <form action="meals" method="get">
-        <label>
-            Choose user
-            <select name="authUser">
-                <c:if test="${selectedUser != '2'}">
-                    <option value="1" selected="selected">User 1</option>
-                    <option value="2">User 2</option>
-                </c:if>
-
-                <c:if test="${selectedUser == '2'}">
-                    <option value="1">User 1</option>
-                    <option value="2" selected="selected">User 2</option>
-                </c:if>
-            </select>
-        </label>
-        <button type="submit">Show selected user's meals</button>
-    </form>
-
     <input type="hidden" name="id" value="${meal.id}"/>
 
     <h3>Filter Meals</h3>

@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.web.servlets;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.SecurityUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,15 +43,11 @@ public class MealServlet extends HttpServlet {
         else
             mealController.update(meal, getInt(id));
 
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        response.sendRedirect("meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String userId = request.getParameter("authUser");
-        if (userId != null)
-            SecurityUtil.setAuthUserId(getInt(userId));
-
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
@@ -72,15 +66,6 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             default:
-                request.setAttribute("selectedUser", SecurityUtil.authUserId());
-
-                //используется для отображения таблицы, пока не выбран authUser
-                if (SecurityUtil.authUserId() == 0) {
-                    request.setAttribute("meals", Collections.emptyList());
-                    request.getRequestDispatcher("/meals.jsp").forward(request, response);
-                    return;
-                }
-
                 List<Meal> meals = mealController.useFilterByDateTime(request)
                                  ? mealController.getAllFiltered(request)
                                  : mealController.getAll();
