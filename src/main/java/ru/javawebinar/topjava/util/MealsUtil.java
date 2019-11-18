@@ -7,7 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -50,17 +53,8 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static <T> List<T> sortByDate(List<T> meals) {
-        T meal = meals.get(0);
-        return meals.stream().sorted(Comparator.comparing((T mealTo) -> meal instanceof Meal
-                             ? ((Meal) meal).getDateTime() : ((MealTo) meal).getDateTime())
-                             .reversed()).collect(Collectors.toList());
-    }
-
-    public static List<MealTo> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate,
-                                                                        LocalTime startTime, LocalTime endTime, int caloriesLimit) {
-        return getFiltered(meals, caloriesLimit, meal ->
-                            DateTimeUtil.isBetween(meal.getDate(), startDate, endDate) &&
-                            DateTimeUtil.isBetween(meal.getTime(), startTime, endTime));
+    public static List<Meal> filterByDateTime(Collection<Meal> meals, LocalDate startDate, LocalDate endDate) {
+       return meals.stream().filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
+                            .collect(Collectors.toList());
     }
 }

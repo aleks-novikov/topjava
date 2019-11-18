@@ -21,11 +21,10 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         log.debug("set auth user id");
         String userId = request.getParameter("authUser");
-        if (userId != null)
-            SecurityUtil.setAuthUserId(Integer.parseInt(userId));
+        SecurityUtil.setAuthUserId(Integer.parseInt(userId));
 
         log.debug("call UserMeals GET()");
         response.sendRedirect("meals");

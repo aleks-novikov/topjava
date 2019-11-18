@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -75,17 +76,26 @@ public class MealServlet extends HttpServlet {
                 String startTime = request.getParameter("startTime");
                 String endTime = request.getParameter("endTime");
 
-                List<MealTo> meals = !mealController.useFilterByDateTime(request)
+                List<MealTo> meals = !useFilterByDateTime(startDate, endDate, startTime, endDate)
                                ? mealController.getAll()
-                               : mealController.getFiltered(!startDate.isEmpty() ? LocalDate.parse(startDate) : LocalDate.MIN,
-                                                            !endDate.isEmpty()   ? LocalDate.parse(endDate)   : LocalDate.MAX,
-                                                            !startTime.isEmpty() ? LocalTime.parse(startTime) : LocalTime.MIN,
-                                                            !endTime.isEmpty()   ? LocalTime.parse(endTime)   : LocalTime.MAX);
+                               : mealController.getFiltered(isNotEmpty(startDate) ? LocalDate.parse(startDate) : null,
+                                                            isNotEmpty(endDate)   ? LocalDate.parse(endDate)   : null,
+                                                            isNotEmpty(startTime) ? LocalTime.parse(startTime) : null,
+                                                            isNotEmpty(endTime)   ? LocalTime.parse(endTime)   : null);
 
                 request.setAttribute("meals", meals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
         }
     }
+
+    private boolean useFilterByDateTime(String ... params) {
+        return Arrays.stream(params).anyMatch(this::isNotEmpty);
+    }
+
+    private boolean isNotEmpty(String param) {
+        return param != null && !param.isEmpty();
+    }
+
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));

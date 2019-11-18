@@ -10,7 +10,6 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -28,27 +27,20 @@ public class MealRestController {
 
     public List<MealTo> getAll() {
         log.info("getAll");
-
         List<Meal> meals = service.getAll(SecurityUtil.authUserId());
-
-        return MealsUtil.getTos(meals.size() > 1
-                        ? MealsUtil.sortByDate(meals) : meals,
-                        SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(meals, SecurityUtil.authUserCaloriesPerDay());
     }
 
-    public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate,
-                                    LocalTime startTime, LocalTime endTime) {
-
+    public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAll filtered by date and time");
-        List<MealTo> filteredMeals = service.getAllByDateTime(SecurityUtil.authUserId(),
-                                     startDate, endDate, startTime, endTime,
-                                     SecurityUtil.authUserCaloriesPerDay());
+        List<Meal> filteredMeals = service.getAllByDate(SecurityUtil.authUserId(),
+                                                            startDate != null ? startDate : LocalDate.MIN,
+                                                            endDate   != null ? endDate   : LocalDate.MAX);
 
-        return filteredMeals.size() > 1
-                ? MealsUtil.sortByDate(filteredMeals)
-                : filteredMeals;
+        return MealsUtil.getFilteredTos(filteredMeals, SecurityUtil.authUserCaloriesPerDay(),
+                                        startTime != null ? startTime : LocalTime.MIN,
+                                        endTime   != null ? endTime   : LocalTime.MAX);
     }
-
 
     public Meal get(int id) {
         log.info("get {}", id);
@@ -70,16 +62,5 @@ public class MealRestController {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
         service.update(SecurityUtil.authUserId(), meal);
-    }
-
-    public boolean useFilterByDateTime(HttpServletRequest request) {
-        return isNotEmpty(request.getParameter("startDate")) ||
-               isNotEmpty(request.getParameter("endDate"))   ||
-               isNotEmpty(request.getParameter("startTime")) ||
-               isNotEmpty(request.getParameter("endTime"));
-    }
-
-    private boolean isNotEmpty(String param) {
-        return param != null && !param.isEmpty();
     }
 }

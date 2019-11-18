@@ -19,7 +19,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     private AtomicInteger counter = new AtomicInteger(0);
     private Map<Integer, User> repository = new ConcurrentHashMap<>();
-    private Map<Integer, String> emails = new ConcurrentHashMap<>();
 
     @Override
     public boolean delete(int id) {
@@ -33,14 +32,10 @@ public class InMemoryUserRepository implements UserRepository {
         if (user.isNew()) {
             user.setId(counter.incrementAndGet());
             repository.put(user.getId(), user);
-            emails.put(user.getId(), user.getEmail());
             return user;
         }
 
-        return repository.computeIfPresent(user.getId(), (id, oldUser) -> {
-            emails.put(id, user.getEmail());
-            return user;
-        });
+        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
     @Override
@@ -63,9 +58,5 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("get user by email {}", email);
         return repository.values().stream().filter(user -> user.getEmail().equals(email))
                                            .findAny().orElse(null);
-    }
-
-    public Map<Integer, String> getEmails() {
-        return emails;
     }
 }
