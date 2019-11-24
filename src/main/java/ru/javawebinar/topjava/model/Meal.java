@@ -14,6 +14,10 @@ public class Meal extends AbstractBaseEntity {
     public Meal() {
     }
 
+    public Meal(Meal mealToCopy) {
+        this(mealToCopy.getId(), mealToCopy.getDateTime(), mealToCopy.getDescription(), mealToCopy.getCalories());
+    }
+
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);
     }
