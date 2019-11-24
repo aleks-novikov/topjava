@@ -16,10 +16,10 @@ public class MealTestData {
     public static final int ADMIN_MEAL_ID_2 = START_SEQ + 6;
 
     public static final Meal USER_MEAL_1 = new Meal(USER_MEAL_ID_1, LocalDateTime.of(2019, 10, 5, 9, 0), "Завтрак", 800);
-    public static final Meal USER_MEAL_2 = new Meal(USER_MEAL_ID_2, LocalDateTime.of(2019, 10, 15, 14, 0), "Обед", 1000);
-    public static final Meal USER_MEAL_3 = new Meal(USER_MEAL_ID_3, LocalDateTime.of(2019, 10, 5, 19, 0), "Ужин", 500);
-    public static final Meal ADMIN_MEAL_1 = new Meal(ADMIN_MEAL_ID_1, LocalDateTime.now(), "Обед", 400);
-    public static final Meal ADMIN_MEAL_2 = new Meal(ADMIN_MEAL_ID_2, LocalDateTime.now(), "Ужин", 1200);
+    public static final Meal USER_MEAL_2 = new Meal(USER_MEAL_ID_2, LocalDateTime.of(2019, 10, 5, 14, 0), "Обед", 1000);
+    public static final Meal USER_MEAL_3 = new Meal(USER_MEAL_ID_3, LocalDateTime.of(2019, 10, 10, 19, 0), "Ужин", 500);
+    public static final Meal ADMIN_MEAL_1 = new Meal(ADMIN_MEAL_ID_1, LocalDateTime.of(2019, 11, 8, 15, 0), "Обед", 400);
+    public static final Meal ADMIN_MEAL_2 = new Meal(ADMIN_MEAL_ID_2, LocalDateTime.of(2019, 11, 9, 19, 0), "Ужин", 1200);
 
 
     public static void assertMatch(Meal actual, Meal expected) {
