@@ -15,18 +15,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-@ContextConfiguration({"classpath:spring/spring-app.xml",
-                       "classpath:spring/spring-db.xml"})
+@ContextConfiguration({"classpath:spring/spring-common.xml",
+                       "classpath:spring/spring-db.xml",
+                       "classpath:spring/spring-jdbc.xml"})
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-
-    private static final int NOT_EXISTING_MEAL_ID = 1;
 
     @Autowired
     MealService service;
@@ -38,13 +36,12 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal expected = service.get(USER_MEAL_ID_1, USER_ID);
-        assertThat(USER_MEAL_1).isEqualTo(expected);
+        assertMatch(USER_MEAL_1, expected);
     }
 
     @Test
     public void delete() {
         service.delete(USER_MEAL_ID_2, USER_ID);
-        service.getAll(USER_ID);
         assertMatch(service.getAll(USER_ID), USER_MEAL_3, USER_MEAL_1);
     }
 

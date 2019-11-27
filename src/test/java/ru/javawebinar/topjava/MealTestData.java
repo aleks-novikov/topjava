@@ -15,6 +15,8 @@ public class MealTestData {
     public static final int ADMIN_MEAL_ID_1 = START_SEQ + 5;
     public static final int ADMIN_MEAL_ID_2 = START_SEQ + 6;
 
+    public static final int NOT_EXISTING_MEAL_ID = 1;
+
     public static final Meal USER_MEAL_1 = new Meal(USER_MEAL_ID_1, LocalDateTime.of(2019, 10, 5, 9, 0), "Завтрак", 800);
     public static final Meal USER_MEAL_2 = new Meal(USER_MEAL_ID_2, LocalDateTime.of(2019, 10, 5, 14, 0), "Обед", 1000);
     public static final Meal USER_MEAL_3 = new Meal(USER_MEAL_ID_3, LocalDateTime.of(2019, 10, 10, 19, 0), "Ужин", 500);
@@ -30,7 +32,7 @@ public class MealTestData {
         assertMatch(actual, Arrays.asList(expected));
     }
 
-    public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("dateTime").isEqualTo(expected);
+    private static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
+        assertThat(actual).isEqualTo(expected);
     }
 }
