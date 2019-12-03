@@ -1,5 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/682e28425e7c4026a299c4a44b11e9bd)](https://www.codacy.com/manual/aleks-novikov/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aleks-novikov/topjava&amp;utm_campaign=Badge_Grade)
-[![Build Status](https://travis-ci.org/JavaWebinar/topjava.svg?branch=master)](https://travis-ci.org/JavaWebinar/topjava)
+[![Build Status](https://travis-ci.org/aleks-novikov/topjava.svg?branch=master)](https://travis-ci.org/JavaWebinar/topjava)
 
 Java Enterprise Online Project 
 ===============================
