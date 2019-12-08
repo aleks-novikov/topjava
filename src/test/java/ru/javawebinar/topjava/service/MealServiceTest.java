@@ -1,6 +1,13 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,6 +19,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.*;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -24,6 +32,47 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static Map<String, Long> testsResults;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Rule
+    public final TestRule watcher = new TestWatcher() {
+
+        private long startTime;
+
+        @Override
+        public void starting(Description description) {
+            startTime = System.currentTimeMillis();
+        }
+
+        @Override
+        public void finished(Description description) {
+            String testName = description.getMethodName();
+            testsResults.put(testName, System.currentTimeMillis() - startTime);
+            System.out.println("\n================================\n" +
+                               testName + " has finished. Execution time: " + testsResults.get(testName) + " ms" +
+                              "\n================================\n");
+        }
+    };
+
+    @BeforeClass
+    public static void mapInitialization(){
+        testsResults = new LinkedHashMap<>();
+    }
+
+    @AfterClass
+    public static void printResults(){
+        System.out.println("\n========== TESTS RESULTS ==========\n");
+
+        for (Map.Entry<String, Long> test: testsResults.entrySet())
+            System.out.println(test.getKey() + " - " + test.getValue() + " ms");
+
+        System.out.println("\n========== TESTS RESULTS ==========\n");
+        testsResults.clear();
+    }
+
     @Autowired
     private MealService service;
 
@@ -33,13 +82,17 @@ public class MealServiceTest {
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test()
     public void deleteNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity with id=" + 1);
         service.delete(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deleteNotOwn() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity with id=" + MEAL1_ID);
         service.delete(MEAL1_ID, ADMIN_ID);
     }
 
@@ -58,13 +111,17 @@ public class MealServiceTest {
         assertMatch(actual, ADMIN_MEAL1);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity with id=" + 1);
         service.get(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotOwn() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity with id=" + MEAL1_ID);
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -75,8 +132,10 @@ public class MealServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void updateNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity with id=" + MEAL1.getId());
         service.update(MEAL1, ADMIN_ID);
     }
 
