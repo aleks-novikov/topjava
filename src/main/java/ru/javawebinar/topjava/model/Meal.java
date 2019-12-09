@@ -1,8 +1,11 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,10 +33,11 @@ public class Meal extends AbstractBaseEntity {
     private LocalDateTime dateTime;
 
     @NotEmpty
+    @Size(min = 2, max = 120)
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotNull
+    @Range(min = 10, max = 5000)
     @Column(name = "calories", nullable = false)
     private int calories;
 

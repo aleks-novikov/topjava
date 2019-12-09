@@ -1,14 +1,15 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.hsqldb.lib.StopWatch;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -20,6 +21,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
@@ -32,30 +34,33 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+
     private static Map<String, Long> testsResults;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Rule
-    public final TestRule watcher = new TestWatcher() {
-
-        private long startTime;
+    public Stopwatch stopwatch = new Stopwatch() {
 
         @Override
-        public void starting(Description description) {
-            startTime = System.currentTimeMillis();
+        protected void succeeded(long time, Description description) {
+            logInfo(description, "succeeded", time);
         }
 
         @Override
-        public void finished(Description description) {
-            String testName = description.getMethodName();
-            testsResults.put(testName, System.currentTimeMillis() - startTime);
-            System.out.println("\n================================\n" +
-                               testName + " has finished. Execution time: " + testsResults.get(testName) + " ms" +
-                              "\n================================\n");
+        protected void failed(long time, Throwable e, Description description) {
+            logInfo(description, "failed", time);
         }
     };
+
+    private static void logInfo(Description description, String status, long time) {
+        String testName = description.getMethodName();
+        long spentTime = TimeUnit.NANOSECONDS.toMillis(time);
+        testsResults.put(testName, spentTime);
+        log.info(String.format("Test %s %s - %d ms", testName, status, spentTime));
+    }
 
     @BeforeClass
     public static void mapInitialization(){
@@ -66,8 +71,8 @@ public class MealServiceTest {
     public static void printResults(){
         System.out.println("\n========== TESTS RESULTS ==========\n");
 
-        for (Map.Entry<String, Long> test: testsResults.entrySet())
-            System.out.println(test.getKey() + " - " + test.getValue() + " ms");
+        for (Map.Entry<String, Long> test : testsResults.entrySet())
+            System.out.println(String.format("%s - %s ms", test.getKey(), test.getValue()));
 
         System.out.println("\n========== TESTS RESULTS ==========\n");
         testsResults.clear();
