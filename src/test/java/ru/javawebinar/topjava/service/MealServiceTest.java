@@ -1,11 +1,8 @@
 package ru.javawebinar.topjava.service;
 
-import org.hsqldb.lib.StopWatch;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.Stopwatch;
-import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,7 +31,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
+    private static final Logger log = LoggerFactory.getLogger("mealServiceTest");
 
     private static Map<String, Long> testsResults;
 
@@ -45,21 +42,16 @@ public class MealServiceTest {
     public Stopwatch stopwatch = new Stopwatch() {
 
         @Override
-        protected void succeeded(long time, Description description) {
-            logInfo(description, "succeeded", time);
-        }
-
-        @Override
-        protected void failed(long time, Throwable e, Description description) {
-            logInfo(description, "failed", time);
+        protected void finished(long time, Description description) {
+            logInfo(description, time);
         }
     };
 
-    private static void logInfo(Description description, String status, long time) {
+    private static void logInfo(Description description, long time) {
         String testName = description.getMethodName();
         long spentTime = TimeUnit.NANOSECONDS.toMillis(time);
         testsResults.put(testName, spentTime);
-        log.info(String.format("Test %s %s - %d ms", testName, status, spentTime));
+        log.info(String.format("Test %s has finished in %d ms", testName, spentTime));
     }
 
     @BeforeClass
@@ -69,12 +61,11 @@ public class MealServiceTest {
 
     @AfterClass
     public static void printResults(){
-        System.out.println("\n========== TESTS RESULTS ==========\n");
-
+        StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Long> test : testsResults.entrySet())
-            System.out.println(String.format("%s - %s ms", test.getKey(), test.getValue()));
+            sb.append(String.format("%s - %s ms \n", test.getKey(), test.getValue()));
 
-        System.out.println("\n========== TESTS RESULTS ==========\n");
+        log.info("\n\n ========== TESTS RESULTS ========== \n\n" + sb.toString());
         testsResults.clear();
     }
 
