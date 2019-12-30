@@ -16,7 +16,6 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.getEndExclusive;
 import static ru.javawebinar.topjava.util.DateTimeUtil.getStartInclusive;
 
 @Repository
-@Profile("jpa")
 @Transactional(readOnly = true)
 public class JpaMealRepository implements MealRepository {
 

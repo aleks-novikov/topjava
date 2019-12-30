@@ -14,7 +14,6 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.getStartInclusive;
 import static ru.javawebinar.topjava.util.DateTimeUtil.getEndExclusive;
 
 @Repository
-@Profile("datajpa")
 public class DataJpaMealRepository implements MealRepository {
 
     @Autowired
