@@ -21,27 +21,27 @@
         </param-value>
     </context-param>
 
+    <!-- Spring MVC -->
     <listener>
+        <!-- создаёт корневой контекст приложения, который будет совместно использоваться
+             с дочерними контекстами, созданными всеми DispatcherServlet (включает spring-app и spring-db).
+             К нему можно обращаться через WebApplicationContextUtils -->
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <servlet>
-        <servlet-name>userServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>userServlet</servlet-name>
-        <url-pattern>/users</url-pattern>
-    </servlet-mapping>
 
     <servlet>
-        <servlet-name>mealServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!-- описание собственного контекста сервлета. Его бины могут обращаться к бинам,
+                 определённым в корневом контексте, однако последние доступа к бинам сервлета не имеют -->
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>mealServlet</servlet-name>
-        <url-pattern>/meals</url-pattern>
+        <servlet-name>mvc-dispatcher</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
-
 </web-app>

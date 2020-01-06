@@ -22,6 +22,7 @@
 
     <!--уровень логгирования для всех классов в указанном пакете-->
     <logger name="ru.javawebinar.topjava" level="debug"/>
+    <logger name="org.springframework.web.servlet" level="debug"/>
 
     <!--уровень логгирования по умолчанию для всего приложения-->
     <root level="info">
