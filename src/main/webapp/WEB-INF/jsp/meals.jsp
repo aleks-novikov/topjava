@@ -24,7 +24,7 @@
     </h2>
 
     <form method="get" action="meals/filter">
-        <input type="hidden" name="action" value="filter">
+        <input type="hidden">
         <dl>
             <dt><spring:message code="meal.fromDate"/>:</dt>
             <dd><input type="date" name="startDate" value="${param.startDate}"></dd>

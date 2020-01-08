@@ -14,17 +14,16 @@
 
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
-<c:set var="isNewMeal" value="${param.id == null}"/>
-
 <section>
     <hr>
 
+    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
+
     <h2>
-        <spring:message code="${isNewMeal ? 'meal.create' : 'meal.update'}"/>
+        <spring:message code="${meal.isNew() ? 'meal.create' : 'meal.update'}"/>
     </h2>
 
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="${isNewMeal ? 'meals/create' : 'meals/update'}">
+    <form method="post" action="${meal.isNew() ? 'meals/create' : 'meals/update'}">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/>:</dt>
