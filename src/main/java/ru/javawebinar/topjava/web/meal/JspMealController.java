@@ -29,9 +29,15 @@ public class JspMealController extends AbstractMealController {
         return "mealForm";
     }
 
-    @PostMapping("/create")
-    public String saveCreatedMeal(HttpServletRequest request) {
-        super.create(getMeal(request));
+    @PostMapping("/save")
+    public String saveMeal(HttpServletRequest request) {
+        Meal meal = getMeal(request);
+
+        if (request.getParameter("id").isEmpty())
+            super.create(meal);
+        else
+            super.update(meal, getId(request));
+
         return "redirect:/meals";  //URL, который начинается с /, - абсолютный,
                                    //иначе относительный по отношению к контексту контроллера
     }
@@ -40,12 +46,6 @@ public class JspMealController extends AbstractMealController {
     public String showMealToUpdate(HttpServletRequest request, Model model) {
         model.addAttribute("meal", super.get(getId(request)));
         return "mealForm";
-    }
-
-    @PostMapping("/update")
-    public String saveUpdatedMeal(HttpServletRequest request) {
-        super.update(getMeal(request), getId(request));
-        return "redirect:/meals";
     }
 
     @GetMapping("/delete")

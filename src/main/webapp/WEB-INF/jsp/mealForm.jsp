@@ -5,10 +5,8 @@
 <html>
 <head>
     <title><spring:message code="meal.title"/></title>
-    <link rel="stylesheet" href="css/style.css">
+    <jsp:include page="fragments/headTag.jsp"/>
 </head>
-
-<jsp:include page="fragments/headTag.jsp"/>
 
 <body>
 
@@ -23,7 +21,7 @@
         <spring:message code="${meal.isNew() ? 'meal.create' : 'meal.update'}"/>
     </h2>
 
-    <form method="post" action="${meal.isNew() ? 'meals/create' : 'meals/update'}">
+    <form method="post" action="meals/save">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/>:</dt>
