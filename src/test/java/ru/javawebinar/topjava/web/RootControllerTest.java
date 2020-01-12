@@ -42,20 +42,13 @@ class RootControllerTest extends AbstractControllerTest {
 
     @Test
     public void getMeals() throws Exception {
+        List<MealTo> expected = MealsUtil.getTos(MealTestData.MEALS,
+                                                 SecurityUtil.authUserCaloriesPerDay());
         mockMvc.perform(get("/meals"))
                .andDo(print())
                .andExpect(status().isOk())
                .andExpect(view().name("meals"))
                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
-               .andExpect(model().attribute("meals",
-                       new AssertionMatcher<List<MealTo>>() {
-                           @Override
-                           public void assertion(List<MealTo> actual) throws AssertionError {
-                               List<MealTo> expected = MealsUtil.getTos(mealService.getAll(SecurityUtil.authUserId()),
-                                                                        SecurityUtil.authUserCaloriesPerDay());
-                               MealTestData.assertMatch(actual, expected);
-                           }
-                        }
-                ));
+               .andExpect(model().attribute("meals", expected));  // для реализации сравнения в MealTo реализованы equals() и hashCode()
     }
 }
