@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
@@ -18,9 +17,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.TestUtil.*;
-import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.TestUtil.readFromJson;
+import static ru.javawebinar.topjava.TestUtil.readFromJsonMvcResult;
+import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.util.MealsUtil.createTo;
+import static ru.javawebinar.topjava.util.MealsUtil.getTos;
 
 public class MealRestControllerTest extends AbstractControllerTest {
 
@@ -53,7 +55,7 @@ public class MealRestControllerTest extends AbstractControllerTest {
                .andExpect(status().isOk())
                .andDo(print())
                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-               .andExpect(contentJson(MealsUtil.getTos(MEALS, USER.getCaloriesPerDay())));
+               .andExpect(contentJson(getTos(MEALS, USER.getCaloriesPerDay())));
     }
 
     @Test
@@ -88,16 +90,23 @@ public class MealRestControllerTest extends AbstractControllerTest {
         MealTestData.assertMatch(mealService.get(updatedMeal.getId(), USER_ID), updatedMeal);
     }
 
-    @Deprecated
     @Test
     void getBetween() throws Exception {
-        String start = "2015-05-30T09:00";
-        String end = "2015-05-30T11:00";
-
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDateTime=" + start + "&endDateTime=" + end)
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+               .param("startDate", "2015-05-30").param("startTime", "07:00")
+               .param("endDate", "2015-05-30").param("endTime", "12:00")
                .contentType(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andDo(print())
                .andExpect(contentJson(createTo(MEAL1, false)));
+    }
+
+    @Test
+    void filterWithEmptyDates() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+               .param("startDate", "").param("startTime", "")
+               .contentType(MediaType.APPLICATION_JSON))
+               .andExpect(status().isOk())
+               .andExpect(contentJson(getTos(MEALS, USER.getCaloriesPerDay())));
     }
 }
