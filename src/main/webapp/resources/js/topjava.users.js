@@ -1,8 +1,8 @@
-
+const ajaxUrl = "ajax/admin/users/";
 
 $(function () {
     makeEditable({
-            ajaxUrl: "ajax/admin/users/",
+            ajaxUrl: ajaxUrl,
             datatableApi: $("#datatable").DataTable({
                 "paging": false,
                 "info": true,
@@ -41,3 +41,17 @@ $(function () {
         }
     );
 });
+
+function changeUserStatus(checkBox, id) {
+    let enabled = checkBox.is(':checked');
+
+    $.ajax({
+        url: context.ajaxUrl + id,
+        type: "POST",
+        data: "enabled=" + enabled
+    }).done(function () {
+        successNoty(enabled ? "Enabled" : "Disabled");
+    }).fail(function () {
+        checkBox.is(':checked', !enabled);
+    });
+}

@@ -11,6 +11,14 @@ function makeEditable(ctx) {
         }
     });
 
+    let userStatusCb = $('input:checkbox');
+
+    if (userStatusCb.length !== 0) {
+        userStatusCb.click(function () {
+            changeUserStatus($(this), $(this).attr("id"));
+        });
+    }
+
     //обработка ошибок при выполнении ajax-запросов для всего документа
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
