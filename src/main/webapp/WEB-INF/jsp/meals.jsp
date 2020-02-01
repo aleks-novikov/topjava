@@ -73,7 +73,7 @@
             </thead>
             <c:forEach items="${meals}" var="meal">
                 <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealTo"/>
-                <tr data-mealExcess="${meal.excess}">
+                <tr id="${meal.id}" data-mealExcess="${meal.excess}">
                     <td>
                             <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
                             <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
@@ -87,7 +87,7 @@
                         <a><span class="fa fa-pencil"></span></a>
                     </td>
                     <td>
-                        <a class="delete" id="${meal.id}">
+                        <a class="delete">
                             <span class="fa fa-remove"></span></a>
                     </td>
 

@@ -42,15 +42,17 @@ $(function () {
     );
 });
 
-function changeUserStatus(checkBox, id) {
+function changeUserStatus(checkBox) {
+    let tr = checkBox.closest('tr');
     let enabled = checkBox.is(':checked');
 
     $.ajax({
-        url: context.ajaxUrl + id,
+        url: context.ajaxUrl + tr.attr('id'),
         type: "POST",
         data: "enabled=" + enabled
     }).done(function () {
         successNoty(enabled ? "Enabled" : "Disabled");
+        tr.toggleClass('disabled_user', !enabled);
     }).fail(function () {
         checkBox.is(':checked', !enabled);
     });

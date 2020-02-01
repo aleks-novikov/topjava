@@ -7,15 +7,15 @@ function makeEditable(ctx) {
     form = $('#detailsForm');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
+            deleteRow($(this).closest('tr').attr('id'));
         }
     });
 
-    let userStatusCb = $('input:checkbox');
+    let userStatusCb = $('tr input:checkbox');
 
     if (userStatusCb.length !== 0) {
         userStatusCb.click(function () {
-            changeUserStatus($(this), $(this).attr("id"));
+            changeUserStatus($(this));
         });
     }
 
