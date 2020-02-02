@@ -18,6 +18,15 @@
         <csrf disabled="true"/>
     </http>
 
+    <!-- форма авторизации -->
+    <http>
+        <intercept-url pattern="/**/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <form-login/> <!-- стандартная форма Spring для авторизации, если мы её не определили -->
+        <logout/>     <!-- стандартная форма log-out -->
+        <csrf disabled="true"/>
+    </http>
+
     <beans:bean name="noopEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
 
     <!--provider для сравнения ролей пользователя с заданными значениями для аутентификации -->
