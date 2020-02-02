@@ -20,10 +20,19 @@
 
     <!-- форма авторизации -->
     <http>
+        <intercept-url pattern="/login" access="permitAll()"/>   <!-- адрес, к которому есть доступ всем пользователям -->
         <intercept-url pattern="/**/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
-        <form-login/> <!-- стандартная форма Spring для авторизации, если мы её не определили -->
-        <logout/>     <!-- стандартная форма log-out -->
+<!--        <form-login/> &lt;!&ndash; стандартная форма Spring для авторизации, если мы её не определили &ndash;&gt;-->
+<!--        <logout/>     &lt;!&ndash; стандартная форма log-out &ndash;&gt;-->
+
+        <!-- настройка форм login и logout -->
+        <!-- default-target-url - куда будет переадресация после аутентификации -->
+        <form-login login-page="/login" default-target-url="/meals"
+                    authentication-failure-url="/login?error=true"
+                    login-processing-url="/spring_security_check"/>
+        <logout logout-success-url="/login"/>
+
         <csrf disabled="true"/>
     </http>
 
