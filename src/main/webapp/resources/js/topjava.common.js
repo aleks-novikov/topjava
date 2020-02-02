@@ -20,6 +20,15 @@ function add() {
     $("#editRow").modal();
 }
 
+function updateRow(id) {
+    $.get(context.ajaxUrl + id, function (data) {
+        $.each(data, function (key, value) {
+            form.find("input[name='" + key + "']").val(value);
+        });
+        $('#editRow').modal();
+    });
+}
+
 function deleteRow(id) {
     //ajax - обертка JQuery над XML HTTP-запросом
     //полная форма ajax'а
