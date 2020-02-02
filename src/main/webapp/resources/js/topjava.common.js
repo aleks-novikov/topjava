@@ -5,11 +5,6 @@ var context, form;
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    $(".delete").click(function () {
-        if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
-        }
-    });
 
     //обработка ошибок при выполнении ajax-запросов для всего документа
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
@@ -28,20 +23,19 @@ function add() {
 function deleteRow(id) {
     //ajax - обертка JQuery над XML HTTP-запросом
     //полная форма ajax'а
-    $.ajax({
-        url: context.ajaxUrl + id,
-        type: "DELETE"
-    }).done(function () {
-        updateTable();
-        successNoty("Deleted");
-    });
+    if (confirm('Are you sure?')) {
+        $.ajax({
+            url: context.ajaxUrl + id,
+            type: "DELETE"
+        }).done(function () {
+            context.updateTable();
+            successNoty("Deleted");
+        });
+    }
 }
 
-function updateTable() {
-    //сокращенная форма (просто передаём параметры)
-    $.get(context.ajaxUrl, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
-    });
+function updateTableByData(data) {
+    context.datatableApi.clear().rows.add(data).draw();
 }
 
 function save() {
@@ -51,12 +45,12 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        context.updateTable();
         successNoty("Saved");
     });
 }
 
-let failedNote;
+var failedNote;
 
 function closeNoty() {
     if (failedNote) {
