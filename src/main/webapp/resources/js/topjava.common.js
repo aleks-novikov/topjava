@@ -11,14 +11,6 @@ function makeEditable(ctx) {
         }
     });
 
-    let userStatusCb = $('tr input:checkbox');
-
-    if (userStatusCb.length !== 0) {
-        userStatusCb.click(function () {
-            changeUserStatus($(this));
-        });
-    }
-
     //обработка ошибок при выполнении ajax-запросов для всего документа
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
@@ -59,7 +51,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        context.ajaxUrl === 'ajax/profile/meals/' ? filterMeals() : updateTable();
         successNoty("Saved");
     });
 }

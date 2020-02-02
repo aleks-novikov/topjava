@@ -18,7 +18,7 @@
 
         <div class="card border-dark">
             <div class="card-body pb-0">
-                <form method="get" action="meals/filter">
+                <form method="get" id="meals_filter_form" action="meals/filter">
 
                     <div class="row">
 
@@ -47,7 +47,12 @@
             </div>
 
             <div class="card-footer text-right">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" id="clear_meals_filter" class="btn btn-danger">
+                    <span class="fa fa-remove"></span>
+                    <spring:message code="common.cancel"/>
+                </button>
+
+                <button type="submit" id="apply_meals_filter" class="btn btn-primary">
                     <span class="fa fa-filter"></span>
                     <spring:message code="meal.filter"/>
                 </button>
