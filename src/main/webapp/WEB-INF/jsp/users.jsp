@@ -25,7 +25,7 @@
             <spring:message code="common.add"/>
         </button>
 
-        <table class="table table-striped" id="datatable">
+        <table class="table" id="datatable">
             <thead>
                 <tr>
                     <th><spring:message code="user.name"/></th>
@@ -42,7 +42,7 @@
 
                 <jsp:useBean id="user" type="ru.javawebinar.topjava.model.User"/>
 
-                <tr id="${user.id}" class="${user.enabled ? 'user_disabled' : ''}">
+                <tr id="${user.id}" class="${!user.enabled ? 'disabled_user' : ''}">
                     <td><c:out value="${user.name}"/></td>
                     <td><a href="mailto:${user.email}">${user.email}</a></td>
                     <td>${user.roles}</td>
