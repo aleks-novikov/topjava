@@ -1,18 +1,23 @@
 package ru.javawebinar.topjava.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private final LocalDateTime dateTime;
 
     private final String description;
 
     private final int calories;
 
-    private final boolean excess;
+    @Nullable
+    private final Boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
     public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
