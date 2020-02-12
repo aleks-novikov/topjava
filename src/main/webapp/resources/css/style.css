@@ -14,14 +14,6 @@ tr[data-userEnabled="false"] {
     opacity: 0.3;
 }
 
-tr[data-mealExcess="true"] {
-    color: red;
-}
-
-tr[data-mealExcess="false"] {
-    color: green;
-}
-
 .error, .message {
     padding: 10px;
     border-radius: 4px;
