@@ -91,14 +91,8 @@
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 
-<%--Интернационализация--%>
-<script type="text/javascript">
-    const i18n = [];
-    i18n["addTitle"] = '<spring:message code="user.add"/>';
-    i18n["editTitle"] = '<spring:message code="user.edit"/>';
+<jsp:include page="fragments/i18n.jsp">
+    <jsp:param name="object" value="user"/>
+</jsp:include>
 
-    <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus","common.confirm"}%>'>
-    i18n["${key}"] = "<spring:message code="${key}"/>";
-    </c:forEach>
-</script>
 </html>
