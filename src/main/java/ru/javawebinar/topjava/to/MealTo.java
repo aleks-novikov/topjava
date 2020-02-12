@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.to;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
     private final LocalDateTime dateTime;
 
     @NotBlank

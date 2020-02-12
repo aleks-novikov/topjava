@@ -13,6 +13,10 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+function formatDateTime(dateTime) {
+    return dateTime.replace('T', ' ').substring(0, 16);
+}
+
 $(function () {
     makeEditable({
         ajaxUrl: mealAjaxUrl,
@@ -27,10 +31,7 @@ $(function () {
                 {
                     "data": "dateTime",
                     "render": function (data, type, row) {
-                        if (type === "display")
-                            return data.replace('T', ' ').substring(0, 16);
-                        else
-                            return data;
+                        return type === "display" ? formatDateTime(data) : data;
                     }
                 },
                 {
