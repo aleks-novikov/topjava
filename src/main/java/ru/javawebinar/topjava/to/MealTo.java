@@ -1,35 +1,20 @@
 package ru.javawebinar.topjava.to;
 
-import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
-import ru.javawebinar.topjava.util.DateTimeUtil;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class MealTo extends BaseTo {
 
-    @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_PATTERN)
     private final LocalDateTime dateTime;
 
-    @NotBlank
-    @Size(min = 2, max = 120)
     private final String description;
 
-    @NotNull
-    @Range(min = 10, max = 5000)
-    private final Integer calories;
+    private final int calories;
 
-    @Nullable
-    private final Boolean excess;
+    private final boolean excess;
 
     @ConstructorProperties({"id", "dateTime", "description", "calories", "excess"})
-    public MealTo(Integer id, LocalDateTime dateTime, String description, Integer calories, Boolean excess) {
+    public MealTo(Integer id, LocalDateTime dateTime, String description, int calories, boolean excess) {
         super(id);
         this.dateTime = dateTime;
         this.description = description;
@@ -51,23 +36,6 @@ public class MealTo extends BaseTo {
 
     public Boolean isExcess() {
         return excess;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MealTo that = (MealTo) o;
-        return  Objects.equals(calories, that.calories) &&
-                Objects.equals(excess, that.excess) &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(dateTime, that.dateTime) &&
-                Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, dateTime, description, calories, excess);
     }
 
     @Override
