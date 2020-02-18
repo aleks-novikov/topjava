@@ -14,6 +14,7 @@
         <!-- формирование правил URL: админ должен иметь роль Admin -->
         <!-- все остальные пользователи под rest/ user должны пройти авторизацию -->
         <intercept-url pattern="/rest/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/rest/profile/register" access="isAnonymous()"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
         <csrf disabled="true"/>
     </http>
@@ -21,6 +22,7 @@
     <!-- форма авторизации -->
     <http>
         <intercept-url pattern="/login" access="permitAll()"/>   <!-- адрес, к которому есть доступ всем пользователям -->
+        <intercept-url pattern="/profile/register" access="isAnonymous()"/>
         <intercept-url pattern="/**/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
 <!--        <form-login/> &lt;!&ndash; стандартная форма Spring для авторизации, если мы её не определили &ndash;&gt;-->

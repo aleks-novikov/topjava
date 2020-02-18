@@ -21,6 +21,7 @@
 
         <sec:authorize access="isAnonymous()">
             <div class="pt-4">
+                <a class="btn btn-lg btn-success" href="profile/register"><spring:message code="app.register"/> &raquo;</a>
                 <button type="submit" class="btn btn-lg btn-primary" onclick="login('user@yandex.ru', 'password')">
                     <spring:message code="app.login"/> User
                 </button>
@@ -29,7 +30,7 @@
                 </button>
             </div>
         </sec:authorize>
-        <div class="lead py-4">Стек технологий: <a href="http://projects.spring.io/spring-security/">Spring Security</a>,
+        <div class="lead py-4">Стек технологий: <br>
             <a href="http://projects.spring.io/spring-security/">Spring Security</a>,
             <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/html/mvc.html">Spring MVC</a>,
             <a href="http://projects.spring.io/spring-data-jpa/">Spring Data JPA</a>,
@@ -64,12 +65,21 @@
     калорий за день норму (редактируемый параметр в профиле пользователя).
     Весь REST интерфейс покрывается JUnit тестами, используя Spring MVC Test и Spring Security Test.
 </div>
+
 <jsp:include page="fragments/footer.jsp"/>
+
 <script type="text/javascript">
+    <c:if test="${not empty param.username}">
+        setCredentials("${param.username}", "");
+    </c:if>
+
     function login(username, password) {
+        setCredentials(username, password);
+        $("#login_form").submit();
+    }
+    function setCredentials(username, password) {
         $('input[name="username"]').val(username);
         $('input[name="password"]').val(password);
-        $("#login_form").submit();
     }
 </script>
 </body>
