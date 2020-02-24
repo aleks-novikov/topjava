@@ -32,6 +32,8 @@ public class ProfileUIController extends AbstractUserController {
         } catch (DataIntegrityViolationException e) {
             result.rejectValue("email", "user.notUniqueEmail");
             return "profile";
+        } catch (Exception e) {
+            return "profile";
         }
     }
 
@@ -51,6 +53,8 @@ public class ProfileUIController extends AbstractUserController {
         } catch (DataIntegrityViolationException e) {
             result.rejectValue("email", "user.notUniqueEmail");
             model.addAttribute("register", true);
+            return "profile";
+        } catch (Exception e) {
             return "profile";
         }
     }
