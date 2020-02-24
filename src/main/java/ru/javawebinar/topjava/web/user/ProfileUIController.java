@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -23,13 +24,14 @@ public class ProfileUIController extends AbstractUserController {
 
     @PostMapping
     public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
-        if (result.hasErrors()) {
-            return "profile";
-        } else {
+        try {
             super.update(userTo, SecurityUtil.authUserId());
             SecurityUtil.get().update(userTo);
             status.setComplete();
             return "redirect:/meals";
+        } catch (DataIntegrityViolationException e) {
+            result.rejectValue("email", "user.notUniqueEmail");
+            return "profile";
         }
     }
 
@@ -42,13 +44,14 @@ public class ProfileUIController extends AbstractUserController {
 
     @PostMapping("/register")
     public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model) {
-        if (result.hasErrors()) {
-            model.addAttribute("register", true);
-            return "profile";
-        } else {
+        try {
             super.create(userTo);
             status.setComplete();
             return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
+        } catch (DataIntegrityViolationException e) {
+            result.rejectValue("email", "user.notUniqueEmail");
+            model.addAttribute("register", true);
+            return "profile";
         }
     }
 }
