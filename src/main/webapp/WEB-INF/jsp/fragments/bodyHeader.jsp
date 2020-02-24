@@ -27,6 +27,7 @@
                 <button class="btn btn-primary my-1" type="submit">
                     <span class="fa fa-sign-out"></span>
                 </button>
+                <jsp:include page="locale.jsp"/>
             </form:form>
         </sec:authorize>
 
@@ -37,6 +38,7 @@
                 <button class="btn btn-success" type="submit">
                     <span class="fa fa-sign-in"></span>
                 </button>
+                <jsp:include page="locale.jsp"/>
             </form:form>
         </sec:authorize>
     </div>
