@@ -25,6 +25,9 @@ public class ProfileUIController extends AbstractUserController {
     @PostMapping
     public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
         try {
+            if (result.hasErrors())
+                return "profile";
+
             super.update(userTo, SecurityUtil.authUserId());
             SecurityUtil.get().update(userTo);
             status.setComplete();
@@ -47,6 +50,9 @@ public class ProfileUIController extends AbstractUserController {
     @PostMapping("/register")
     public String saveRegister(@Valid UserTo userTo, BindingResult result, SessionStatus status, ModelMap model) {
         try {
+            if (result.hasErrors())
+                return "profile";
+
             super.create(userTo);
             status.setComplete();
             return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
