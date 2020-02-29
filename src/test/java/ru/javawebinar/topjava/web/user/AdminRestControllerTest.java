@@ -153,7 +153,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
         User updated = new User(USER);
         updated.setEmail("admin@gmail.com");
         perform(doPut(USER_ID).jsonUserWithPassword(updated).basicAuth(ADMIN))
-                .andExpect(status().isConflict())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_EMAIL))
                 .andDo(print());
@@ -164,7 +164,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
     void createDuplicate() throws Exception {
         User expected = new User(null, "New", "user@yandex.ru", "newPass", 2300, Role.ROLE_USER, Role.ROLE_ADMIN);
         perform(doPost().jsonUserWithPassword(expected).basicAuth(ADMIN))
-                .andExpect(status().isConflict())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
                 .andExpect(detailMessage(EXCEPTION_DUPLICATE_EMAIL));
 
